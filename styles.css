@@ -334,19 +334,32 @@ p {
   gap: 8px;
   height: 230px;
   padding: 12px 0 2px;
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(
+      to top,
+      rgba(21, 93, 115, 0.06) 0,
+      rgba(21, 93, 115, 0.06) 1px,
+      transparent 1px,
+      transparent 46px
+    );
 }
 
 .bar-item {
   flex: 1;
+  height: 100%;
   display: grid;
+  align-content: end;
   justify-items: center;
   gap: 8px;
 }
 
 .bar-item span {
+  display: block;
   width: 100%;
   max-width: 45px;
   height: var(--h);
+  min-height: 14px;
   border-radius: 12px 12px 8px 8px;
   background: linear-gradient(180deg, var(--brand) 0%, var(--brand-2) 100%);
   position: relative;
@@ -423,6 +436,17 @@ p {
   cursor: not-allowed;
 }
 
+.danger-btn {
+  border: 1px solid #d8b5b5;
+  background: #fff5f5;
+  color: #9f2f2f;
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .patient-meta {
   display: grid;
   gap: 2px;
@@ -474,10 +498,36 @@ p {
   color: var(--ink);
 }
 
+.form-field select {
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+
+.form-field textarea {
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  resize: vertical;
+}
+
 .form-actions {
   display: flex;
   justify-content: end;
   gap: 8px;
+}
+
+.form-error {
+  min-height: 18px;
+  margin: 0;
+  color: #b34141;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 @keyframes rise {
