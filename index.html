@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dental Clinic Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-noise" aria-hidden="true"></div>
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="logo-mark">DC</div>
+        <div>
+          <p class="eyebrow">Operations Suite</p>
+          <h1>SmileOps</h1>
+        </div>
+      </div>
+
+      <nav class="menu" aria-label="Main navigation">
+        <button class="menu-item active" data-view="dashboard">Dashboard</button>
+        <button class="menu-item" data-view="appointments">Appointments</button>
+        <button class="menu-item" data-view="patients">Patients</button>
+        <button class="menu-item" data-view="treatment-plans">Treatment Plans</button>
+        <button class="menu-item" data-view="billing">Billing</button>
+        <button class="menu-item" data-view="inventory">Inventory</button>
+        <button class="menu-item" data-view="team">Team</button>
+      </nav>
+
+      <section class="quick-card">
+        <p class="eyebrow">Today</p>
+        <h2 id="bookedCount">26 patients booked</h2>
+        <p id="bookedBreakdown">4 surgeries, 9 cleanings, 13 consultations</p>
+      </section>
+    </aside>
+
+    <section class="content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel">Sunday, March 29, 2026</p>
+          <h2 id="pageTitle">Dental Clinic Management System</h2>
+        </div>
+        <div class="chip-row" role="tablist" aria-label="Date range filters" id="chipRow">
+          <button class="chip active" data-range="today">Today</button>
+          <button class="chip" data-range="week">This Week</button>
+          <button class="chip" data-range="month">This Month</button>
+        </div>
+      </header>
+
+      <section class="view-section active" data-view="dashboard">
+        <section class="stats-grid" aria-label="Top metrics">
+          <article class="metric-card">
+            <p class="metric-label">Checked-in Patients</p>
+            <p class="metric-value" id="checkedInCount">14</p>
+            <p class="metric-trend up">+12% vs yesterday</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Completed Procedures</p>
+            <p class="metric-value" id="completedProcedures">31</p>
+            <p class="metric-trend up">+8% weekly trend</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Pending Insurance</p>
+            <p class="metric-value" id="pendingInsurance">$5,420</p>
+            <p class="metric-trend down">Needs follow-up today</p>
+          </article>
+        </section>
+
+        <section class="panel-grid">
+          <article class="panel appointments-panel">
+            <div class="panel-head">
+              <h3>Appointment Timeline</h3>
+              <span class="panel-note">Live Queue</span>
+            </div>
+            <ul id="appointmentsList" class="appointment-list"></ul>
+          </article>
+
+          <article class="panel queue-panel">
+            <div class="panel-head">
+              <h3>Waiting Room</h3>
+              <span class="panel-note">Front Desk</span>
+            </div>
+            <ul id="queueList" class="queue-list"></ul>
+          </article>
+
+          <article class="panel treatment-panel">
+            <div class="panel-head">
+              <h3>Treatment Performance</h3>
+              <span class="panel-note">Monthly</span>
+            </div>
+            <div class="bars" aria-label="Treatment chart">
+              <div class="bar-item"><span style="--h: 72%"></span><p>Ortho</p></div>
+              <div class="bar-item"><span style="--h: 38%"></span><p>Whitening</p></div>
+              <div class="bar-item"><span style="--h: 54%"></span><p>Implants</p></div>
+              <div class="bar-item"><span style="--h: 86%"></span><p>Cleaning</p></div>
+              <div class="bar-item"><span style="--h: 44%"></span><p>Root Canal</p></div>
+            </div>
+          </article>
+
+          <article class="panel billing-panel">
+            <div class="panel-head">
+              <h3>Billing Snapshot</h3>
+              <span class="panel-note">Today</span>
+            </div>
+            <div class="money-grid" id="billingSnapshot"></div>
+          </article>
+        </section>
+      </section>
+
+      <section class="view-section" data-view="appointments">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Manage Appointments</h3>
+            <button class="mark-btn" id="addAppointmentBtn" type="button">Add Walk-in</button>
+          </div>
+          <ul id="appointmentsManagerList" class="queue-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" data-view="patients">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Patient Records</h3>
+            <button class="mark-btn" id="addPatientBtn" type="button">New Patient</button>
+          </div>
+          <ul id="patientsList" class="queue-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" data-view="treatment-plans">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Treatment Plans</h3>
+            <span class="panel-note">Dentist Review</span>
+          </div>
+          <ul id="plansList" class="queue-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" data-view="billing">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Invoices</h3>
+            <span class="panel-note">Cashier</span>
+          </div>
+          <ul id="invoiceList" class="queue-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" data-view="inventory">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Inventory Status</h3>
+            <div class="form-actions">
+              <button class="ghost-btn" id="addInventoryBtn" type="button">Add Item</button>
+              <button class="mark-btn" id="restockAllBtn" type="button">Restock Low Items</button>
+            </div>
+          </div>
+          <ul id="inventoryList" class="queue-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" data-view="team">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Team Attendance</h3>
+            <div class="form-actions">
+              <button class="ghost-btn" id="addTeamBtn" type="button">Add Team</button>
+              <span class="panel-note">Clinic Staff</span>
+            </div>
+          </div>
+          <ul id="teamList" class="queue-list"></ul>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="patientModal" role="dialog" aria-modal="true" aria-labelledby="patientModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="patientModalTitle">Add New Patient</h3>
+        <button class="ghost-btn" type="button" id="closePatientModalBtn">Close</button>
+      </div>
+      <form id="patientForm" class="patient-form">
+        <label class="form-field">
+          <span>Full Name</span>
+          <input type="text" id="patientNameInput" required />
+        </label>
+        <label class="form-field">
+          <span>Contact Number</span>
+          <input type="tel" id="patientContactInput" required />
+        </label>
+        <label class="form-field">
+          <span>Email Address</span>
+          <input type="email" id="patientEmailInput" required />
+        </label>
+        <label class="form-field">
+          <span>Birthdate</span>
+          <input type="date" id="patientBirthdateInput" required />
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelPatientModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Patient</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="appointmentModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="appointmentModalTitle">Add Appointment</h3>
+        <button class="ghost-btn" type="button" id="closeAppointmentModalBtn">Close</button>
+      </div>
+      <form id="appointmentForm" class="patient-form">
+        <label class="form-field">
+          <span>Patient Name</span>
+          <input type="text" id="appointmentPatientInput" required />
+        </label>
+        <label class="form-field">
+          <span>Appointment Date</span>
+          <input type="date" id="appointmentDateInput" required />
+        </label>
+        <label class="form-field">
+          <span>Appointment Time</span>
+          <input type="time" id="appointmentTimeInput" required />
+        </label>
+        <label class="form-field">
+          <span>Procedure</span>
+          <input type="text" id="appointmentProcedureInput" required />
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelAppointmentModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="inventoryModal" role="dialog" aria-modal="true" aria-labelledby="inventoryModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="inventoryModalTitle">Add Inventory Item</h3>
+        <button class="ghost-btn" type="button" id="closeInventoryModalBtn">Close</button>
+      </div>
+      <form id="inventoryForm" class="patient-form">
+        <label class="form-field">
+          <span>Item Name</span>
+          <input type="text" id="inventoryItemNameInput" required />
+        </label>
+        <label class="form-field">
+          <span>Initial Stock</span>
+          <input type="number" id="inventoryItemStockInput" min="0" step="1" required />
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelInventoryModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="teamModal" role="dialog" aria-modal="true" aria-labelledby="teamModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="teamModalTitle">Add Team Member</h3>
+        <button class="ghost-btn" type="button" id="closeTeamModalBtn">Close</button>
+      </div>
+      <form id="teamForm" class="patient-form">
+        <label class="form-field">
+          <span>Full Name</span>
+          <input type="text" id="teamNameInput" required />
+        </label>
+        <label class="form-field">
+          <span>Role</span>
+          <input type="text" id="teamRoleInput" required />
+        </label>
+        <label class="form-field">
+          <span>Shift Date</span>
+          <input type="date" id="teamShiftDateInput" required />
+        </label>
+        <label class="form-field">
+          <span>Shift Time</span>
+          <input type="time" id="teamShiftTimeInput" required />
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelTeamModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Team Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
