@@ -115,7 +115,10 @@
         <article class="panel">
           <div class="panel-head">
             <h3>Manage Appointments</h3>
-            <button class="mark-btn" id="addAppointmentBtn" type="button">Add Walk-in</button>
+            <div class="form-actions">
+              <button class="ghost-btn" id="toggleAppointmentsViewBtn" type="button">Grouped View: On</button>
+              <button class="mark-btn" id="addAppointmentBtn" type="button">Add Walk-in</button>
+            </div>
           </div>
           <ul id="appointmentsManagerList" class="queue-list"></ul>
         </article>
@@ -135,7 +138,10 @@
         <article class="panel">
           <div class="panel-head">
             <h3>Treatment Plans</h3>
-            <span class="panel-note">Dentist Review</span>
+            <div class="form-actions">
+              <button class="ghost-btn" id="addOrthoPlanBtn" type="button">Create Treatment Plan</button>
+              <span class="panel-note">Dentist Review</span>
+            </div>
           </div>
           <ul id="plansList" class="queue-list"></ul>
         </article>
@@ -156,6 +162,7 @@
           <div class="panel-head">
             <h3>Inventory Status</h3>
             <div class="form-actions">
+              <button class="ghost-btn" id="addDentalStockBtn" type="button">Load Dental Stock</button>
               <button class="ghost-btn" id="addInventoryBtn" type="button">Add Item</button>
               <button class="mark-btn" id="restockAllBtn" type="button">Restock Low Items</button>
             </div>
@@ -199,6 +206,14 @@
           <input type="email" id="patientEmailInput" required />
         </label>
         <label class="form-field">
+          <span>Address</span>
+          <input type="text" id="patientAddressInput" required />
+        </label>
+        <label class="form-field">
+          <span>Medical History</span>
+          <textarea id="patientHistoryInput" rows="3" required></textarea>
+        </label>
+        <label class="form-field">
           <span>Birthdate</span>
           <input type="date" id="patientBirthdateInput" required />
         </label>
@@ -219,7 +234,9 @@
       <form id="appointmentForm" class="patient-form">
         <label class="form-field">
           <span>Patient Name</span>
-          <input type="text" id="appointmentPatientInput" required />
+          <select id="appointmentPatientInput" required>
+            <option value="" selected disabled>Select patient</option>
+          </select>
         </label>
         <label class="form-field">
           <span>Appointment Date</span>
@@ -230,9 +247,19 @@
           <input type="time" id="appointmentTimeInput" required />
         </label>
         <label class="form-field">
+          <span>Dentist</span>
+          <select id="appointmentDentistInput" required>
+            <option value="" selected disabled>Select dentist</option>
+            <option value="Dr. Reyes">Dr. Reyes</option>
+            <option value="Dr. Lim">Dr. Lim</option>
+            <option value="Dr. Cruz">Dr. Cruz</option>
+          </select>
+        </label>
+        <label class="form-field">
           <span>Procedure</span>
           <input type="text" id="appointmentProcedureInput" required />
         </label>
+        <p id="appointmentError" class="form-error" aria-live="polite"></p>
         <div class="form-actions">
           <button class="ghost-btn" type="button" id="cancelAppointmentModalBtn">Cancel</button>
           <button class="mark-btn" type="submit">Save Appointment</button>
@@ -277,7 +304,16 @@
         </label>
         <label class="form-field">
           <span>Role</span>
-          <input type="text" id="teamRoleInput" required />
+          <select id="teamRoleInput" required>
+            <option value="" selected disabled>Select role</option>
+            <option value="Orthodontist">Orthodontist</option>
+            <option value="General Dentist">General Dentist</option>
+            <option value="Dental Assistant">Dental Assistant</option>
+            <option value="Dental Hygienist">Dental Hygienist</option>
+            <option value="Front Desk">Front Desk</option>
+            <option value="Cashier">Cashier</option>
+            <option value="Clinic Manager">Clinic Manager</option>
+          </select>
         </label>
         <label class="form-field">
           <span>Shift Date</span>
@@ -290,6 +326,179 @@
         <div class="form-actions">
           <button class="ghost-btn" type="button" id="cancelTeamModalBtn">Cancel</button>
           <button class="mark-btn" type="submit">Save Team Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="billingPlanModal" role="dialog" aria-modal="true" aria-labelledby="billingPlanModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="billingPlanModalTitle">Set Payment Plan</h3>
+        <button class="ghost-btn" type="button" id="closeBillingPlanModalBtn">Close</button>
+      </div>
+      <form id="billingPlanForm" class="patient-form">
+        <label class="form-field">
+          <span>Total Amount</span>
+          <input type="number" id="planTotalInput" min="0" step="0.01" required />
+        </label>
+        <label class="form-field">
+          <span>Downpayment</span>
+          <input type="number" id="planDownpaymentInput" min="0" step="0.01" required />
+        </label>
+        <label class="form-field">
+          <span>Monthly Terms (months)</span>
+          <input type="number" id="planMonthsInput" min="1" step="1" required />
+        </label>
+        <input type="hidden" id="planInvoiceIdInput" />
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelBillingPlanModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="orthoPlanModal" role="dialog" aria-modal="true" aria-labelledby="orthoPlanModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="orthoPlanModalTitle">Create Treatment Plan</h3>
+        <button class="ghost-btn" type="button" id="closeOrthoPlanModalBtn">Close</button>
+      </div>
+      <form id="orthoPlanForm" class="patient-form">
+        <label class="form-field">
+          <span>Patient Name</span>
+          <select id="orthoPatientNameInput" required>
+            <option value="" selected disabled>Select patient</option>
+          </select>
+        </label>
+        <label class="form-field">
+          <span>Treatment Type</span>
+          <select id="orthoTreatmentTypeInput" required>
+            <option value="" selected disabled>Select treatment</option>
+            <option value="ortho">Braces (Ortho)</option>
+            <option value="cleaning">Cleaning</option>
+            <option value="root_canal">Root Canal</option>
+            <option value="extraction">Extraction</option>
+            <option value="whitening">Whitening</option>
+            <option value="implant">Implant</option>
+          </select>
+        </label>
+        <label class="form-field">
+          <span>Start Date</span>
+          <input type="date" id="orthoStartDateInput" required />
+        </label>
+        <label class="form-field">
+          <span>Duration (months, for braces)</span>
+          <input type="number" id="orthoMonthsInput" min="1" step="1" value="12" required />
+        </label>
+        <label class="form-field">
+          <span>Adjustment Time</span>
+          <input type="time" id="orthoTimeInput" required />
+        </label>
+        <label class="form-field">
+          <span>Package Total</span>
+          <input type="number" id="orthoTotalInput" min="0" step="0.01" required />
+        </label>
+        <label class="form-field">
+          <span>Downpayment</span>
+          <input type="number" id="orthoDownpaymentInput" min="0" step="0.01" value="0" required />
+        </label>
+        <p id="orthoPlanError" class="form-error" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelOrthoPlanModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Create Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="examModal" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="examModalTitle">Dental Examination</h3>
+        <button class="ghost-btn" type="button" id="closeExamModalBtn">Close</button>
+      </div>
+      <form id="examForm" class="patient-form">
+        <input type="hidden" id="examPatientIdInput" />
+        <label class="form-field">
+          <span>Symptoms</span>
+          <textarea id="examSymptomsInput" rows="3" required></textarea>
+        </label>
+        <label class="form-field">
+          <span>Diagnosis</span>
+          <textarea id="examDiagnosisInput" rows="3" required></textarea>
+        </label>
+        <label class="form-field">
+          <span>Dental Chart Notes</span>
+          <textarea id="examChartInput" rows="3" placeholder="Ex: #14 cavity, #30 sensitivity" required></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelExamModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Exam</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="treatmentModal" role="dialog" aria-modal="true" aria-labelledby="treatmentModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="treatmentModalTitle">Treatment Execution</h3>
+        <button class="ghost-btn" type="button" id="closeTreatmentModalBtn">Close</button>
+      </div>
+      <form id="treatmentForm" class="patient-form">
+        <input type="hidden" id="treatmentPlanIdInput" />
+        <label class="form-field">
+          <span>Procedure Notes</span>
+          <textarea id="treatmentNotesInput" rows="3" required></textarea>
+        </label>
+        <label class="form-field">
+          <span>Materials Used</span>
+          <textarea id="treatmentMaterialsInput" rows="2" placeholder="Example: Latex Gloves (Box):2, Anesthetic Cartridges:1" required></textarea>
+        </label>
+        <p id="treatmentError" class="form-error" aria-live="polite"></p>
+        <label class="form-field">
+          <span>Prescription</span>
+          <textarea id="treatmentPrescriptionInput" rows="2" required></textarea>
+        </label>
+        <label class="form-field">
+          <span>Medical Report</span>
+          <textarea id="treatmentReportInput" rows="3" required></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelTreatmentModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Treatment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="paymentModal" role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle">
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3 id="paymentModalTitle">Record Payment</h3>
+        <button class="ghost-btn" type="button" id="closePaymentModalBtn">Close</button>
+      </div>
+      <form id="paymentForm" class="patient-form">
+        <input type="hidden" id="paymentInvoiceIdInput" />
+        <label class="form-field">
+          <span>Amount</span>
+          <input type="number" id="paymentAmountInput" min="0" step="0.01" required />
+        </label>
+        <label class="form-field">
+          <span>Payment Method</span>
+          <select id="paymentMethodInput" required>
+            <option value="" selected disabled>Select method</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="Insurance">Insurance</option>
+            <option value="E-Wallet">E-Wallet</option>
+          </select>
+        </label>
+        <div class="form-actions">
+          <button class="ghost-btn" type="button" id="cancelPaymentModalBtn">Cancel</button>
+          <button class="mark-btn" type="submit">Save Payment</button>
         </div>
       </form>
     </div>
